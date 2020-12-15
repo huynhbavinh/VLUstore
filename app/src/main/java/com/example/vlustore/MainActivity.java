@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair<View,String>(img_logo,"logo_image");
                 pairs[1] = new Pair<View,String>(img_name,"logo_name");
-
+                
                 ActivityOptions options =
                         ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,pairs);
                 startActivity(intent,options.toBundle());
