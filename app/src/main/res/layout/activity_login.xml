@@ -67,7 +67,6 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
         <TextView
             android:id="@+id/txt_get_password"
             android:layout_width="wrap_content"
