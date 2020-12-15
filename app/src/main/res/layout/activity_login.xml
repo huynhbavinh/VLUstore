@@ -9,6 +9,7 @@
     android:padding="10dp"
     tools:context=".LoginActivity">
 
+
     <ImageView
         android:id="@+id/img_login_logo"
         android:layout_width="120dp"
