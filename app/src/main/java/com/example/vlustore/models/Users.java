@@ -1,4 +1,4 @@
-package com.example.vlustore.controller;
+package com.example.vlustore.models;
 
 public class Users {
     String fullname, username, password, confirmPassword, phoneNo;
