@@ -18,8 +18,7 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_login);
-
-        btn_to_signup = findViewById(R.id.txt_go_to_signup);
+        containsKey();
 
         btn_to_signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -29,5 +28,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void containsKey() {
+        btn_to_signup = findViewById(R.id.txt_go_to_signup);
     }
 }
