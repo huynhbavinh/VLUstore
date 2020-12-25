@@ -1,7 +1,7 @@
 package com.example.vlustore.models;
 
 public class Users {
-    String fullname, username, password, confirmPassword, phoneNo;
+    String fullname, username, password,  phoneNo;
 
     public String getFullname() {
         return fullname;
@@ -27,13 +27,6 @@ public class Users {
         this.password = password;
     }
 
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
 
     public String getPhoneNo() {
         return phoneNo;

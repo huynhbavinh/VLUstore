@@ -3,6 +3,7 @@ package com.example.vlustore;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,15 +18,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class SignUpActivity extends AppCompatActivity {
     // values
-    private String username, password, phone, fullname;
+    private String username, password, phone, fullname, confirm_password;
     private String append;
 
     // models
-    private Users users;
+    private Users user;
 
     // firebase
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -37,124 +39,118 @@ public class SignUpActivity extends AppCompatActivity {
     private Button btn_signup, btn_back_to_login;
     private TextInputLayout txt_username, txt_fullname, txt_password, txt_cfpassword, txt_phoneno;
 
+    //query
+    private Query usernameQuery;
+
+    //
+    private final String FIREBASE_USERS_PATH = "users";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
         containsKey();
 
-        btn_signup.setOnClickListener(new View.OnClickListener() {
+        btn_back_to_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                firebaseAuth = FirebaseAuth.getInstance();
-                rootNode = FirebaseDatabase.getInstance();
-                reference = rootNode.getReference();
-                getValues(reference);
-                setupFirebaseAuth();
+                callLogin();
+                finish();
             }
         });
 
     }
 
-    // SET UP FIREBASE AUTHENTICATOR
-    private void setupFirebaseAuth() {
+    // ON CLICK
+    public void registerUser(View view) {
+        if (!validateFullName() | !validateUserName() | !validatePassword() | !validateConfirmPassword()) {
+            return;
+        }
+        getValues();
+        setupFirebase();
+        checkIfUsernameExist(username);
+    }
 
-        authStateListener = new FirebaseAuth.AuthStateListener() {
+    /**
+     * ------------------------------------------------------------------------------------------
+     **/
+
+    /**
+     * VALIDATOR
+     **/
+
+    private void checkIfUsernameExist(final String username) {
+        usernameQuery = reference.orderByChild("username").equalTo(username);
+        usernameQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            // username not exist
-                            if (!validateFullName() | !validateUserName() | !validatePassword() | !validateConfirmPassword()){
-                                if (checkIfUserNameExist(username, snapshot)){
-                                    Toast.makeText(SignUpActivity.this,"username already exist",Toast.LENGTH_LONG).show();
-                                }
-                            }
-                            Toast.makeText(SignUpActivity.this,"done",Toast.LENGTH_LONG).show();
-
-                            // add user name to database
-
-                            //
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getChildrenCount() > 0) {
+                    Toast.makeText(SignUpActivity.this, "Username is already exist!", Toast.LENGTH_LONG).show();
                 } else {
-
+                    user = new Users(fullname, username, password, phone);
+                    reference.child(username).setValue(user);
+                    Toast.makeText(SignUpActivity.this, "Registed", Toast.LENGTH_SHORT).show();
+                    callLogin();
+                    finish();
                 }
             }
-        };
-    }
 
-    // VALIDATOR
-    private Boolean checkIfUserNameExist(String username, DataSnapshot dataSnapshot) {
-        Log.d("Username validator", "checkIfUserNameExist: check if " + username + " already exist.");
-        Users users = new Users();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            users.setUsername(ds.getValue(Users.class).getUsername());
-
-            if (expandUsername(users.getUsername()).equals(username)) {
-                return true;
             }
-            return false;
-        }
-        return true;
+        });
     }
 
-    private Boolean validateFullName() {
+    // validator fullname
+    private boolean validateFullName() {
         String value = txt_fullname.getEditText().getText().toString();
         if (value.isEmpty()) {
-            txt_fullname.setError("Không được để trống");
+            txt_fullname.setError("This cannot be empty!");
             return false;
         } else {
             txt_fullname.setError(null);
-            txt_fullname.setEnabled(false);
+            txt_fullname.setErrorEnabled(false);
             return true;
         }
     }
 
-    private Boolean validateUserName() {
+    // validator username
+    private boolean validateUserName() {
         String value = txt_username.getEditText().getText().toString();
-        String noSpecicalCharacter = "( @ - _ ^ * # & $ .\\)";
         if (value.isEmpty()) {
             txt_username.setError("This cannot be empty!");
             return false;
-        } else if ((8 >= value.length()) && (value.length() >= 15)) {
-            txt_username.setError("username must be between 8 and 15");
+
+        } else if ((6 > value.length()) | (value.length() >= 15)) {
+            txt_username.setError("Username must be between 6 and 15");
             return false;
         } else {
             txt_username.setError(null);
-            txt_username.setEnabled(false);
+            txt_username.setErrorEnabled(false);
             return true;
         }
 
     }
 
-    private Boolean validatePassword() {
+    // validator password
+    private boolean validatePassword() {
         String value = txt_password.getEditText().getText().toString();
         if (value.isEmpty()) {
             txt_password.setError("This cannot be empty!");
             return false;
-        } else if ((8 >= value.length()) && (value.length() >= 15)) {
-            txt_password.setError("username must be between 8 and 15");
+        } else if ((6 > value.length())) {
+            txt_password.setError("Password too weak");
             return false;
         } else {
             txt_password.setError(null);
-            txt_password.setEnabled(false);
+            txt_password.setErrorEnabled(false);
             return true;
         }
     }
 
-    private Boolean validateConfirmPassword() {
+    // validator confirm password
+    private boolean validateConfirmPassword() {
         String value = txt_cfpassword.getEditText().getText().toString();
         String password = txt_password.getEditText().getText().toString();
         if (value.isEmpty()) {
@@ -164,11 +160,10 @@ public class SignUpActivity extends AppCompatActivity {
             txt_cfpassword.setError("Confirm password is not the same as password");
             return false;
         } else {
-            txt_password.setError(null);
-            txt_password.setEnabled(false);
+            txt_cfpassword.setError(null);
+            txt_cfpassword.setErrorEnabled(false);
             return true;
         }
-
     }
 
 
@@ -176,16 +171,21 @@ public class SignUpActivity extends AppCompatActivity {
      * ------------------------------------------------------------------------------------------
      **/
 
-    // GET VALUE TO DATABASE
-    private void getValues(DatabaseReference reference) {
+    // GET VALUE FROME WIDGETS
+    private void getValues() {
         fullname = txt_fullname.getEditText().getText().toString();
         username = txt_username.getEditText().getText().toString();
         password = txt_password.getEditText().getText().toString();
         phone = txt_phoneno.getEditText().getText().toString();
-
-        users = new Users(fullname, username, password, phone);
-        reference.child(username).setValue(users);
     }
+
+
+    private void setupFirebase() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        rootNode = FirebaseDatabase.getInstance();
+        reference = rootNode.getReference(FIREBASE_USERS_PATH);
+    }
+
 
     // INIT WIDGETS
     private void containsKey() {
@@ -195,15 +195,14 @@ public class SignUpActivity extends AppCompatActivity {
         txt_cfpassword = findViewById(R.id.signup_txt_cfpassword);
         txt_phoneno = findViewById(R.id.sigup_txt_phone);
         btn_signup = findViewById(R.id.signup_btn);
+        btn_back_to_login = findViewById(R.id.signup_btn_back_to_login);
     }
 
-    //STRING MANIPULATION
-    private static String expandUsername(String username) {
-        return username.replace(".", " ");
+    // CALL BACK TO LOGIN ACTIVITY
+    private void callLogin() {
+        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 
-    private static String condenseUsername(String username) {
-        return username.replace(" ", ".");
-    }
     /* ------------------------------------------------------------------------*/
 }
