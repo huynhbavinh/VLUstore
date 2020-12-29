@@ -22,7 +22,7 @@ public class ProductDisplayActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     private DatabaseReference ProductsRef;
     //ListView lvSP;
-    ArrayList<com.example.vlustore.models.Product> mangSP;
+    ArrayList<Product> mangSP;
     String TAG = "loi";
     //private RecyclerAdapter recyclerAdapter;
 
