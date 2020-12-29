@@ -65,14 +65,15 @@ RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
                     Intent intent = new Intent(mcontext, mainDetailProduct.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+                    Log.d("kiemtra", "onClick: " + productsList.get(position).getDate());
+
                     intent.putExtra("day_create",productsList.get(position).getDate());
                     intent.putExtra("time_create",productsList.get(position).getTime());
+
                     intent.putExtra("pname", productsList.get(position).getPname());
                     intent.putExtra("price", productsList.get(position).getPrice());
-                    intent.putExtra("des", productsList.get(position).getDescription());
+                    intent.putExtra("des", productsList.get(position).getDescription());// là des not description
                     intent.putExtra("img", productsList.get(position).getImage());
-
-
 
                     mcontext.startActivity(intent);
 
@@ -80,7 +81,7 @@ RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
             });
 
         }catch (Exception e){
-            e.printStackTrace();
+            Toast.makeText(mcontext, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

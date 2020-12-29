@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".mainDetailProduct"></activity>
+        <activity android:name=".mainDetailProduct"
+            android:parentActivityName=".ProductDisplayActivity"></activity>
         <activity android:name=".ProductDisplayActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
