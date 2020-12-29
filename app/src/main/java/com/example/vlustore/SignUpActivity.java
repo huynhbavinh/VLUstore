@@ -24,16 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 public class SignUpActivity extends AppCompatActivity {
     // values
     private String username, password, phone, fullname, confirm_password;
-    private String append;
 
     // models
     private Users user;
 
     // firebase
-    private FirebaseAuth.AuthStateListener authStateListener;
-    private FirebaseAuth firebaseAuth;
     private FirebaseDatabase rootNode;
     private DatabaseReference reference;
+
 
     //widgets
     private Button btn_signup, btn_back_to_login;
@@ -181,7 +179,6 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     private void setupFirebase() {
-        firebaseAuth = FirebaseAuth.getInstance();
         rootNode = FirebaseDatabase.getInstance();
         reference = rootNode.getReference(FIREBASE_USERS_PATH);
     }
