@@ -21,21 +21,17 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout linear;
     ImageView img_logo, img_name, img_sologan;
     Animation topAnim, bottomAnim;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //get animation
-        topAnim = AnimationUtils.loadAnimation(this,R.anim.top_animation);
-        bottomAnim = AnimationUtils.loadAnimation(this,R.anim.botton_animation);
+        loadAnimation();
 
         //get components
-        main_scr = findViewById(R.id.main_activity);
-        img_logo = findViewById(R.id.img_splash_scr_logo);
-        img_name = findViewById(R.id.img_splash_scr_name);
-        img_sologan = findViewById(R.id.img_splash_scr_sologan);
-        linear = findViewById(R.id.ln_splash_scr_logo);
+        containsKey();
 
         linear.setAnimation(topAnim);
         img_logo.setAnimation(topAnim);
@@ -45,17 +41,30 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 
                 Pair[] pairs = new Pair[2];
-                pairs[0] = new Pair<View,String>(img_logo,"logo_image");
-                pairs[1] = new Pair<View,String>(img_name,"logo_name");
+                pairs[0] = new Pair<View, String>(img_logo, "logo_image");
+                pairs[1] = new Pair<View, String>(img_name, "logo_name");
 
                 ActivityOptions options =
-                        ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,pairs);
-                startActivity(intent,options.toBundle());
+                        ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
+                startActivity(intent, options.toBundle());
                 finish();
             }
-        },SPLASH_SCREEN);
+        }, SPLASH_SCREEN);
+    }
+
+    private void containsKey() {
+        main_scr = findViewById(R.id.main_activity);
+        img_logo = findViewById(R.id.img_splash_scr_logo);
+        img_name = findViewById(R.id.img_splash_scr_name);
+        img_sologan = findViewById(R.id.img_splash_scr_sologan);
+        linear = findViewById(R.id.ln_splash_scr_logo);
+    }
+
+    private void loadAnimation() {
+        topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);
+        bottomAnim = AnimationUtils.loadAnimation(this, R.anim.botton_animation);
     }
 }
