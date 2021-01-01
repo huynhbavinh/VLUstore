@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.vlustore.models.Product;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +28,7 @@ public class ProductDisplayActivity extends AppCompatActivity {
     ArrayList<Product> mangSP;
     String TAG = "loi";
     //private RecyclerAdapter recyclerAdapter;
+    Button floaticon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,6 @@ public class ProductDisplayActivity extends AppCompatActivity {
         //lvSP = (ListView) findViewById(R.id.listviewSP);
         mangSP = new ArrayList<>();
         getData();
-
     }
     void getData(){
         Query query = ProductsRef.child("Products");

@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mainDetailProduct">
+    tools:context=".Cart_System_Activity">
 
     <Button
-        android:id="@+id/giohang"
+        android:id="@+id/deleted"
         android:layout_width="138dp"
         android:layout_height="71dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="64dp"
-        android:text="Add to cart"
-        app:layout_constraintStart_toEndOf="@+id/cancelbtn"
-        app:layout_constraintTop_toBottomOf="@+id/ednoidung" />
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="28dp"
+        android:text="Delete"
+        app:layout_constraintStart_toEndOf="@+id/update"
+        app:layout_constraintTop_toBottomOf="@+id/edsoluong" />
 
     <TextView
         android:id="@+id/mota"
@@ -95,12 +95,12 @@
         app:layout_constraintTop_toBottomOf="@+id/mota" />
 
     <Button
-        android:id="@+id/cancelbtn"
+        android:id="@+id/update"
         android:layout_width="138dp"
         android:layout_height="71dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="64dp"
-        android:text="Cancel"
+        android:layout_marginTop="76dp"
+        android:text="Update"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ednoidung" />
 
@@ -126,4 +126,5 @@
         android:inputType="textPersonName"
         app:layout_constraintStart_toEndOf="@+id/quantity"
         app:layout_constraintTop_toBottomOf="@+id/ednoidung" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

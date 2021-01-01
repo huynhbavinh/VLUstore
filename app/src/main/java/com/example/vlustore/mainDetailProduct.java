@@ -1,7 +1,9 @@
 package com.example.vlustore;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,10 +14,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.vlustore.models.Product;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 
 public class mainDetailProduct extends AppCompatActivity {
-    EditText ednoidung,edgiatien,edtensanpham;
-    TextView noidung,giatien,tensanpham;
+    EditText ednoidung,edgiatien,edtensanpham,edsoluong;
+    TextView noidung,giatien,tensanpham,quantity;
     Button quaylai,giohang;
     ImageView img;
     String d_pname,d_price,d_des,d_img;
@@ -32,10 +43,11 @@ public class mainDetailProduct extends AppCompatActivity {
         edtensanpham = (EditText) findViewById(R.id.edsanpham);
         noidung = (TextView) findViewById(R.id.mota);
         giatien = (TextView) findViewById(R.id.giatien);
+        edsoluong = (EditText) findViewById(R.id.edsoluong);
+        quantity = (TextView) findViewById(R.id.quantity);
         tensanpham = (TextView) findViewById(R.id.sanpham);
         img = (ImageView) findViewById(R.id.d_imageView);
-        quaylai = (Button) findViewById(R.id.cancel);
-
+        quaylai = (Button) findViewById(R.id.cancelbtn);
         quaylai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,6 +56,55 @@ public class mainDetailProduct extends AppCompatActivity {
         });
         getData();
         setData();
+        giohang = (Button) findViewById(R.id.giohang);
+        giohang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addingToCartList();
+            }
+        });
+    }
+
+
+    private void addingToCartList() {
+        String saveCurrentTime, saveCurrentDate;
+        Calendar calForDate = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd,yyyy");
+        saveCurrentDate = currentDate.format(calForDate.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+        saveCurrentTime = currentDate.format(calForDate.getTime());
+
+        DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List").child("0982").child(d_pname);
+
+        final HashMap<String,Object> cartMap = new HashMap<>();
+        cartMap.put("pid",keyProduct);
+        cartMap.put("pnmane",edtensanpham.getText().toString());
+        cartMap.put("price",edgiatien.getText().toString());
+        cartMap.put("des",ednoidung.getText().toString());
+        cartMap.put("qual",edsoluong.getText().toString());
+        cartMap.put("date",saveCurrentDate);
+        cartMap.put("time",saveCurrentTime);
+
+
+        //DatabaseReference load_product = FirebaseDatabase.getInstance().getReference().child("Products").child(keyProduct);
+
+        cartListRef.updateChildren(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+              if (task.isSuccessful()){
+                  Toast.makeText(mainDetailProduct.this,"Added to Cart List.",Toast.LENGTH_SHORT).show();
+                  Intent intent = new Intent(mainDetailProduct.this,CartActivity.class);
+                  intent.putExtra("bill_product_pname",d_pname);
+
+                  startActivity(intent);
+              }
+            }
+        });
+
+
+
+
     }
 
     private void getData(){
