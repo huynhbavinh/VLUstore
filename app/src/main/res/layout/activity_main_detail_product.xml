@@ -6,15 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".mainDetailProduct">
 
+    <TextView
+        android:id="@+id/ednoidung"
+        android:layout_width="373dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mota" />
+
     <Button
         android:id="@+id/giohang"
         android:layout_width="138dp"
         android:layout_height="71dp"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="13dp"
         android:text="Add to cart"
         app:layout_constraintStart_toEndOf="@+id/cancelbtn"
-        app:layout_constraintTop_toBottomOf="@+id/ednoidung" />
+        app:layout_constraintTop_toBottomOf="@+id/edsoluong" />
 
     <TextView
         android:id="@+id/mota"
@@ -33,7 +44,7 @@
         android:layout_width="122dp"
         android:layout_height="47dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="24dp"
         android:text="Price"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -62,68 +73,60 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/d_imageView" />
 
-    <EditText
-        android:id="@+id/edsanpham"
-        android:layout_width="378dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="11dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sanpham" />
-
-    <EditText
-        android:id="@+id/edgiatien"
-        android:layout_width="247dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/giatien"
-        app:layout_constraintTop_toBottomOf="@+id/edsanpham" />
-
-    <EditText
-        android:id="@+id/ednoidung"
-        android:layout_width="377dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mota" />
-
     <Button
         android:id="@+id/cancelbtn"
         android:layout_width="138dp"
         android:layout_height="71dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="13dp"
         android:text="Cancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ednoidung" />
+        app:layout_constraintTop_toBottomOf="@+id/edsoluong" />
 
     <TextView
         android:id="@+id/quantity"
         android:layout_width="106dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="7dp"
         android:text="Quantity"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ednoidung" />
 
+    <TextView
+        android:id="@+id/edsanpham"
+        android:layout_width="373dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="13dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sanpham" />
+
+    <TextView
+        android:id="@+id/edgiatien"
+        android:layout_width="235dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="26dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/giatien"
+        app:layout_constraintTop_toBottomOf="@+id/edsanpham" />
+
     <EditText
         android:id="@+id/edsoluong"
-        android:layout_width="204dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="192dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="3dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/quantity"
         app:layout_constraintTop_toBottomOf="@+id/ednoidung" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

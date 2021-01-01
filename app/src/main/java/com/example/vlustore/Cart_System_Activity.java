@@ -12,10 +12,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.vlustore.models.Bill;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
@@ -27,35 +29,68 @@ public class Cart_System_Activity extends AppCompatActivity {
     ImageView img;
     String d_pname,d_price,d_des,d_img;
     String keyProduct;
+    String TAG = "loiCartSystem";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart__system_);
 
-        ednoidung = (EditText) findViewById(R.id.ednoidung);
-        edgiatien = (EditText) findViewById(R.id.edgiatien);
-        edtensanpham = (EditText) findViewById(R.id.edsanpham);
-        noidung = (TextView) findViewById(R.id.mota);
-        giatien = (TextView) findViewById(R.id.giatien);
         edsoluong = (EditText) findViewById(R.id.edsoluong);
         quantity = (TextView) findViewById(R.id.quantity);
-        tensanpham = (TextView) findViewById(R.id.sanpham);
-        img = (ImageView) findViewById(R.id.d_imageView);
         getContactDetail();
     }
     private void getContactDetail(){
         Intent intent = getIntent();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myReference = database.getReference("Cart List");
-        myReference.child(keyProduct).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        if(getIntent().hasExtra("pid"))
+        {
+            keyProduct = getIntent().getStringExtra("pid");
+        }else{
+            Log.d("loiCartSystem", "getContactDetail:fail " );
+        }
+
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference("Cart List");
+        //DatabaseReference myReference = database.getReference("Cart List");
+
+        Query query = database.child("0982").orderByChild(keyProduct);
+
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                  String qual = snapshot.child(keyProduct).child("qual").getValue().toString();
+                  edsoluong.setText(qual);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        /*
+        myReference.child("0982").child(keyProduct).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                q
                 try {
-                    HashMap<String, Object> hashMap = (HashMap<String, Object>) snapshot.getValue();
-                    edtensanpham.setText(hashMap.get("pnname").toString());
-                    edgiatien.setText(hashMap.get("price").toString());
-                    ednoidung.setText(hashMap.get("des").toString());
-                    quantity.setText(hashMap.get("qual").toString());
+                    Bill bills = snapshot.getValue(Bill.class);
+
+
+//                    edtensanpham.setText(snapshot.child("pnname").getValue(String.class));
+//                    Log.d(TAG, "onDataChange1: " + snapshot.child("pnname").getValue(String.class));
+//
+//
+//                    edgiatien.setText(snapshot.child(keyProduct).child("price").getValue(String.class));
+//                    ednoidung.setText(snapshot.child(keyProduct).child("des").getValue(String.class));
+//                    quantity.setText(snapshot.child(keyProduct).child("qual").getValue(String.class));
+//                    edtensanpham.setText(hashMap.get("pnname").toString());
+//                    edgiatien.setText(hashMap.get("price").toString());
+//                    ednoidung.setText(hashMap.get("des").toString());
+//                    quantity.setText(hashMap.get("qual").toString());
+
+
+
 
                 } catch (Exception e) {
                     Log.d("LOI_JSON",e.toString());
@@ -67,18 +102,22 @@ public class Cart_System_Activity extends AppCompatActivity {
 
             }
         });
+        */
+
+
         delete = (Button)findViewById(R.id.deleted);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("Cart List");
-                myRef.child(keyProduct).removeValue();
+                myRef.child("0982").child(keyProduct).removeValue();
                 finish();
-
-
             }
         });
+
+
+
         update = (Button) findViewById(R.id.update);
         update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,14 +125,8 @@ public class Cart_System_Activity extends AppCompatActivity {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("Cart List");
                 String contactId=keyProduct;
-                String pnname =ednoidung.getText().toString();
-                String price =edgiatien.getText().toString();
-                String des =ednoidung.getText().toString();
                 String qual =edsoluong.getText().toString();
-                myRef.child(contactId).child("pnname").setValue(edtensanpham);
-                myRef.child(contactId).child("price").setValue(edgiatien);
-                myRef.child(contactId).child("des").setValue(ednoidung);
-                myRef.child(contactId).child("qual").setValue(edsoluong);
+                myRef.child("0982").child(contactId).child("qual").setValue(qual);
                 finish();
             }
         });

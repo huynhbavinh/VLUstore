@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.vlustore.models.Product;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +29,7 @@ public class ProductDisplayActivity extends AppCompatActivity {
     ArrayList<Product> mangSP;
     String TAG = "loi";
     //private RecyclerAdapter recyclerAdapter;
-    Button floaticon;
+    FloatingActionButton floaticon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,14 @@ public class ProductDisplayActivity extends AppCompatActivity {
         //lvSP = (ListView) findViewById(R.id.listviewSP);
         mangSP = new ArrayList<>();
         getData();
+        floaticon = (FloatingActionButton) findViewById(R.id.floatingActionButton4);
+        floaticon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductDisplayActivity.this,CartActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     void getData(){
         Query query = ProductsRef.child("Products");

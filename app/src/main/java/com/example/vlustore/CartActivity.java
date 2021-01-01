@@ -36,6 +36,8 @@ public class CartActivity extends AppCompatActivity {
     private TextView txtTotalAmount;
     private DatabaseReference ProductsRef;
     private String child_product;
+    String chuyen_soluong_bill;
+    String soluong="";
 
     ListView list;
     ArrayAdapter<String> adapter;
@@ -62,7 +64,8 @@ public class CartActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(CartActivity.this,ProductDisplayActivity.class);
+                startActivity(intent);
             }
         });
         //fire-base
@@ -86,12 +89,14 @@ public class CartActivity extends AppCompatActivity {
 
     private void getData() {
 
-        if (getIntent().hasExtra("bill_product_pname"))
+        if (getIntent().hasExtra("bill_product_pname")
+            && getIntent().hasExtra("chuyen_soluong_bill")
+        )
         {
 
             child_product = getIntent().getStringExtra("bill_product_pname");
-
-            Log.d("kiem ta", "getData: ok");
+            chuyen_soluong_bill = getIntent().getStringExtra("chuyen_soluong_bill");
+            Log.d("kiemtra", "getData: ok" + chuyen_soluong_bill);
 
         }else {
             Log.d("loi", "getData: fails ");
@@ -110,13 +115,17 @@ public class CartActivity extends AppCompatActivity {
                     for (DataSnapshot data : snapshot.getChildren()){
 
                             String key = data.getKey();
-                            String bill = data.getValue(Bill.class).toString();
+                            Log.d("loi~", "loi adapter -"+ key);
+                            soluong = data.child("qual").getValue(String.class);
+
+                            String bill = data.getValue(Bill.class).toString() + "\n" + "số lượng : " + soluong + " cái" ;
+
                             adapter.add(key + bill);
 
                     }
                 }catch (Exception e){
                     Toast.makeText(CartActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.d("loi~", ""+e.getMessage());
+                    Log.d("loi~", "loi adapter "+ soluong);
                 }
 
             }

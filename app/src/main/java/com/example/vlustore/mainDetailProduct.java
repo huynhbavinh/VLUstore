@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.vlustore.models.Bill;
 import com.example.vlustore.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,12 +27,13 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 public class mainDetailProduct extends AppCompatActivity {
-    EditText ednoidung,edgiatien,edtensanpham,edsoluong;
+    TextView ednoidung,edgiatien,edtensanpham,edsoluong;
     TextView noidung,giatien,tensanpham,quantity;
     Button quaylai,giohang;
     ImageView img;
     String d_pname,d_price,d_des,d_img;
     String keyProduct;
+    int soluong=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +41,9 @@ public class mainDetailProduct extends AppCompatActivity {
         setContentView(R.layout.activity_main_detail_product);
 
 
-        ednoidung = (EditText) findViewById(R.id.ednoidung);
-        edgiatien = (EditText) findViewById(R.id.edgiatien);
-        edtensanpham = (EditText) findViewById(R.id.edsanpham);
+        ednoidung = (TextView) findViewById(R.id.ednoidung);
+        edgiatien = (TextView) findViewById(R.id.edgiatien);
+        edtensanpham = (TextView) findViewById(R.id.edsanpham);
         noidung = (TextView) findViewById(R.id.mota);
         giatien = (TextView) findViewById(R.id.giatien);
         edsoluong = (EditText) findViewById(R.id.edsoluong);
@@ -86,9 +89,8 @@ public class mainDetailProduct extends AppCompatActivity {
         cartMap.put("date",saveCurrentDate);
         cartMap.put("time",saveCurrentTime);
 
-
+        soluong = Integer.valueOf(edsoluong.getText().toString());
         //DatabaseReference load_product = FirebaseDatabase.getInstance().getReference().child("Products").child(keyProduct);
-
         cartListRef.updateChildren(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -96,20 +98,17 @@ public class mainDetailProduct extends AppCompatActivity {
                   Toast.makeText(mainDetailProduct.this,"Added to Cart List.",Toast.LENGTH_SHORT).show();
                   Intent intent = new Intent(mainDetailProduct.this,CartActivity.class);
                   intent.putExtra("bill_product_pname",d_pname);
+                  Bill bill = new Bill(edtensanpham.getText().toString(),ednoidung.getText().toString(),edgiatien.getText().toString(),soluong);
+                  String chuyen_soluong_bill = String.valueOf(bill.getQuality());
+                  intent.putExtra("chuyen_soluong_bill",chuyen_soluong_bill);
 
                   startActivity(intent);
               }
             }
         });
-
-
-
-
     }
 
     private void getData(){
-
-
             if (getIntent().hasExtra("pname")
 
                     && getIntent().hasExtra("price")
@@ -126,7 +125,6 @@ public class mainDetailProduct extends AppCompatActivity {
                 keyProduct = getIntent().getStringExtra("day_create") + getIntent().getStringExtra("time_create") ;
 
                 Log.d("kiem ta", "getData: ok");
-
             }else {
                 Log.d("loi", "getData: fails ");
             }
