@@ -40,11 +40,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_login);
         containsKey();
-
-
     }
 
     /* ON CLICK */
@@ -77,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //get values
+    //get values from db
     private void getValue() {
         username = txt_username.getEditText().getText().toString();
         password = txt_password.getEditText().getText().toString();
@@ -85,9 +82,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getValueFromDB(DataSnapshot snapshot) {
         usernameDB = snapshot.child(username).child("username").getValue(String.class);
-        fullnameDB = snapshot.child(username).child("fullname").getValue(String.class);
-        phoneDB = snapshot.child(username).child("phoneNo").getValue(String.class);
-        passwordDB = snapshot.child(username).child("password").getValue(String.class);
+//        fullnameDB = snapshot.child(username).child("fullname").getValue(String.class);
+//        phoneDB = snapshot.child(username).child("phoneNo").getValue(String.class);
+//        passwordDB = snapshot.child(username).child("password").getValue(String.class);
     }
 
     private void setupFirebase() {
@@ -109,17 +106,15 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (_passwordDB.equals(password)) {
                         Log.d("LOGIN: ", "LOGIN SUCCESS");
-
                         getValueFromDB(snapshot);
 
                         Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
-
-                        intent.putExtra("fullname", fullnameDB);
                         intent.putExtra("username", usernameDB);
-                        intent.putExtra("phoneNo", phoneDB);
-                        intent.putExtra("password", passwordDB);
-                        Toast.makeText(LoginActivity.this, "login successful!", Toast.LENGTH_SHORT).show();
+//                        intent.putExtra("phoneNo", phoneDB);
+//                        intent.putExtra("password", passwordDB);
 
+
+                        Toast.makeText(LoginActivity.this, "login successful!", Toast.LENGTH_SHORT).show();
                         startActivity(intent);
                         finish();
 

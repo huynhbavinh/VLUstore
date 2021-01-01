@@ -32,7 +32,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="95dp"
                 android:layout_toRightOf="@id/profile_image"
-                android:text="anh khoi nguyen"
+                android:text="FULL NAME"
                 android:textColor="#FFFFFF"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -44,7 +44,7 @@
                 android:layout_below="@id/profile_fullname"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/profile_image"
-                android:text="nkhoi"
+                android:text="username"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="italic" />
@@ -117,6 +117,7 @@
             android:padding="20dp">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/profile_txt_fullname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Full Name">
@@ -124,11 +125,11 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:maxLines="1"
-                    android:text="anh khoi nguyen" />
+                    android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/profile_txt_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -137,10 +138,11 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="0123456789" />
+                    android:maxLines="1"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/profile_txt_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -149,11 +151,10 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:editable="false"
+                    android:enabled="false"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:text="123456xz" />
+                    android:maxLines="1" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -162,6 +163,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:background="#009FE5"
+                android:onClick="updateUserData"
                 android:text="update"
                 android:textSize="15dp" />
 
