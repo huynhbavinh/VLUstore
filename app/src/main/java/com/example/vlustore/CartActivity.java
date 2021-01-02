@@ -68,6 +68,15 @@ public class CartActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        NextProcessBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CartActivity.this, ConfirmActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+        });
         //fire-base
         ProductsRef = FirebaseDatabase.getInstance().getReference();
 
