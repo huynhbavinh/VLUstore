@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 
 import com.example.vlustore.models.Bill;
 import com.example.vlustore.models.Product;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +30,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -72,6 +78,12 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CartActivity.this, ConfirmActivity.class);
+                for (int i = 0 ; i < adapter.getCount(); i++){
+                    String[] item =  new String[adapter.getCount()];
+                    item[i] = adapter.getItem(i);
+
+                    ConfirmInformation(item[i]);
+                }
                 startActivity(intent);
                 finish();
 
@@ -144,5 +156,40 @@ public class CartActivity extends AppCompatActivity {
                 Log.d("loi~", "onCancelled: ",error.toException());
             }
         });
+    }
+    private void ConfirmInformation(String item){
+
+        final String saveCurrentDate, saveCurrentTime;
+
+
+        Calendar Cafordate = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
+        saveCurrentDate = currentDate.format(Cafordate.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+        saveCurrentTime = currentDate.format(Cafordate.getTime());
+
+        final String KeyBill = saveCurrentTime + saveCurrentDate;
+        final DatabaseReference Information = FirebaseDatabase.getInstance().getReference().child("order").child("0982");
+
+        HashMap<String, Object> orderMap  = new HashMap<>();
+        orderMap.put("sanpham",item);
+        orderMap.put("pid", KeyBill);
+        orderMap.put("date", saveCurrentDate);
+        orderMap.put("time", saveCurrentTime);
+
+        Information.updateChildren(orderMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful())
+                    FirebaseDatabase.getInstance().getReference()
+                            .child("Cart List")
+                            .child("0982")
+                            .removeValue();
+
+            }
+        });
+
+
     }
 }
