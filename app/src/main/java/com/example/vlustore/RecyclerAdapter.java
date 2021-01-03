@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.vlustore.models.Bill;
 import com.example.vlustore.models.Product;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     private static final String TAG ="loi";
     private Context mcontext;
     private ArrayList<Product> productsList;
+    private ArrayList<Bill> bill_list;
 
     public RecyclerAdapter(Context mcontext, ArrayList<Product> productsList) {
         this.mcontext = mcontext;
@@ -35,6 +37,8 @@ RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
         Log.d(TAG, "RecyclerAdapter: thanh cong");
 
     }
+
+
 
     @NonNull
     @Override
@@ -67,12 +71,11 @@ RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
                     intent.putExtra("day_create",productsList.get(position).getDate());
                     intent.putExtra("time_create",productsList.get(position).getTime());
+
                     intent.putExtra("pname", productsList.get(position).getPname());
                     intent.putExtra("price", productsList.get(position).getPrice());
                     intent.putExtra("des", productsList.get(position).getDescription());
                     intent.putExtra("img", productsList.get(position).getImage());
-
-
 
                     mcontext.startActivity(intent);
 
@@ -80,7 +83,7 @@ RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
             });
 
         }catch (Exception e){
-            e.printStackTrace();
+            Toast.makeText(mcontext, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
