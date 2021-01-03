@@ -27,6 +27,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 public class mainDetailProduct extends AppCompatActivity {
+    private String _username;
+    private Intent intent;
     TextView ednoidung,edgiatien,edtensanpham,edsoluong;
     TextView noidung,giatien,tensanpham,quantity;
     Button quaylai,giohang;
@@ -39,7 +41,8 @@ public class mainDetailProduct extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_detail_product);
-
+        getUsername();
+        Log.d("product details: ", "onCreate: " + _username);
 
         ednoidung = (TextView) findViewById(R.id.ednoidung);
         edgiatien = (TextView) findViewById(R.id.edgiatien);
@@ -68,6 +71,11 @@ public class mainDetailProduct extends AppCompatActivity {
         });
     }
 
+    private void getUsername() {
+        intent = getIntent();
+        _username = intent.getStringExtra("username");
+    }
+
 
     private void addingToCartList() {
         String saveCurrentTime, saveCurrentDate;
@@ -78,7 +86,7 @@ public class mainDetailProduct extends AppCompatActivity {
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentDate.format(calForDate.getTime());
 
-        DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List").child("0982").child(d_pname);
+        DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List").child(_username).child(d_pname);
 
         final HashMap<String,Object> cartMap = new HashMap<>();
         cartMap.put("pid",keyProduct);
@@ -101,7 +109,7 @@ public class mainDetailProduct extends AppCompatActivity {
                   Bill bill = new Bill(edtensanpham.getText().toString(),ednoidung.getText().toString(),edgiatien.getText().toString(),soluong);
                   String chuyen_soluong_bill = String.valueOf(bill.getQuality());
                   intent.putExtra("chuyen_soluong_bill",chuyen_soluong_bill);
-
+                  intent.putExtra("username", _username);
                   startActivity(intent);
               }
             }

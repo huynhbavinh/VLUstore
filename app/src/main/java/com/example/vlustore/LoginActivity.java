@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("LOGIN: ", "LOGIN SUCCESS");
                         getValueFromDB(snapshot);
 
-                        Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), ProductDisplayActivity.class);
                         intent.putExtra("username", usernameDB);
 
                         Toast.makeText(LoginActivity.this, "login successful!", Toast.LENGTH_SHORT).show();

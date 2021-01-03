@@ -7,6 +7,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,7 +34,7 @@ public class UserProfileActivity extends AppCompatActivity {
     // Inits
     TextView txt_profile_name, txt_profile_username;
     TextInputLayout txt_fullname, txt_phone, txt_password;
-    DrawerLayout drawerLayout;
+
     //intents
     private Intent intent;
 
@@ -81,6 +82,7 @@ public class UserProfileActivity extends AppCompatActivity {
         setupFirebase();
         _username = intent.getStringExtra("username");
 
+        Log.d("Get intent", "showAllUserData: " + _username);
         userQuery = reference.orderByChild("username").equalTo(_username);
         userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -120,32 +122,5 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
 
-    /* Navigation Drawer MENU*/
-    public void ClickMenu(View view){
-        // open drawer
-        openDrawer(drawerLayout);
-    }
 
-    private static void openDrawer(DrawerLayout drawerLayout) {
-        // open drawer layout
-        drawerLayout.openDrawer(GravityCompat.START);
-    }
-
-    public void ClickLogo(View view){
-        // close drawer
-        closeDrawer(drawerLayout);
-    }
-
-    private void closeDrawer(DrawerLayout drawerLayout) {
-        // close drawer layout
-        // check condition
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
-            // close drawer
-            drawerLayout.closeDrawer(GravityCompat.START);
-        }
-    }
-
-    public void ClickHome(View view){
-        recreate();
-    }
 }

@@ -2,13 +2,18 @@ package com.example.vlustore;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.vlustore.models.Product;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,8 +27,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class ProductDisplayActivity extends AppCompatActivity {
-
+    private static String _username;
+    private DrawerLayout drawerLayout;
+    private TextView nav_username;
     RecyclerView recyclerView;
+    private Intent intent;
     private DatabaseReference ProductsRef;
     //ListView lvSP;
     ArrayList<Product> mangSP;
@@ -36,43 +44,49 @@ public class ProductDisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_display);
 
-        recyclerView = (RecyclerView)findViewById(R.id.recy_list);
+        // get username from intent
+        getUsername();
+        nav_username = findViewById(R.id.navigation_txt_username);
+        // set username to navigation menu
+        nav_username.setText(_username);
+
+        // init drawer layout
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        // init recycler View
+        recyclerView = (RecyclerView) findViewById(R.id.recy_list);
 
         ProductsRef = FirebaseDatabase.getInstance().getReference();
-        //lvSP = (ListView) findViewById(R.id.listviewSP);
         mangSP = new ArrayList<>();
         getData();
-        floaticon = (FloatingActionButton) findViewById(R.id.floatingActionButton4);
-        floaticon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProductDisplayActivity.this,CartActivity.class);
-                startActivity(intent);
-            }
-        });
+
+//        floaticon = (FloatingActionButton) findViewById(R.id.floatingActionButton4);
+//        floaticon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(ProductDisplayActivity.this, CartActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
-    void getData(){
+
+    private void getUsername() {
+        intent = getIntent();
+        _username = getIntent().getStringExtra("username");
+    }
+
+    void getData() {
         Query query = ProductsRef.child("Products");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mangSP.clear();
-                for (DataSnapshot data : snapshot.getChildren()){
+                for (DataSnapshot data : snapshot.getChildren()) {
                     Product product = data.getValue(Product.class);
-                    /*
-                    product.setImage(data.child("image").getValue().toString());
-                    product.setPname(data.child("pname").toString());
-                    product.setCategory(data.child("category").toString());
-                    product.setDate(data.child("date").toString());
-                    product.setDescription(data.child("description").toString());
-                    product.setPid(data.child("pid").toString());
-                    product.setPrice(data.child("price").toString());
-                    product.setTime(data.child("time").toString());
-                     */
 
                     mangSP.add(product);
                 }
-                RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getApplicationContext(),mangSP);
+                RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getApplicationContext(), mangSP,_username);
 
                 recyclerView.setAdapter(recyclerAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(ProductDisplayActivity.this));
@@ -86,15 +100,72 @@ public class ProductDisplayActivity extends AppCompatActivity {
             }
         });
     }
-    /*
-    void ClearAll(){
-        if (mangSP != null){
-            mangSP.clear();
-            if (recyclerAdapter != null){
-                recyclerAdapter.notifyDataSetChanged();
-            }
-        }
 
+    /* Navigation Drawer MENU*/
+    public void ClickMenu(View view) {
+        // open drawer
+
+        openDrawer(drawerLayout);
     }
-     */
+
+    private static void openDrawer(DrawerLayout drawerLayout) {
+        // open drawer layout
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    public void ClickLogo(View view) {
+        // close drawer
+        closeDrawer(drawerLayout);
+    }
+
+    private void closeDrawer(DrawerLayout drawerLayout) {
+        // close drawer layout
+        // check condition
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            // close drawer
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    // USER PROFILE
+    public void ClickUsername(View view) {
+        intent = new Intent(ProductDisplayActivity.this,UserProfileActivity.class);
+        intent.putExtra("username", _username);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    // PRODUCT DISPLAY
+    public void ClickHome(View view) {
+        closeDrawer(drawerLayout);
+    }
+
+    // SHOPING CART
+    public void ClickShopingCart(View view) {
+        redirectActivity(this, CartActivity.class);
+    }
+
+    // LOG OUT
+    public void ClickExit(View view) {
+        logout(this);
+    }
+
+    private static void logout(Activity activity) {
+        activity.finishAffinity();
+        System.exit(0);
+    }
+
+    private static void redirectActivity(Activity activity, Class aClass) {
+
+        Intent intent = new Intent(activity, aClass);
+        intent.putExtra("username", _username);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        closeDrawer(drawerLayout);
+    }
 }

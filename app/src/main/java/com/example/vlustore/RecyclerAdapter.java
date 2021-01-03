@@ -25,16 +25,20 @@ import java.util.ArrayList;
 public class
 RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
+
+
     RecyclerView recyclerView;
     private static final String TAG ="loi";
     private Context mcontext;
     private ArrayList<Product> productsList;
     private ArrayList<Bill> bill_list;
+    private String _username;
 
-    public RecyclerAdapter(Context mcontext, ArrayList<Product> productsList) {
+    public RecyclerAdapter(Context mcontext, ArrayList<Product> productsList,String username) {
         this.mcontext = mcontext;
         this.productsList = productsList;
-        Log.d(TAG, "RecyclerAdapter: thanh cong");
+        _username = username;
+        Log.d(TAG, "RecyclerAdapter: thanh cong" + _username);
 
     }
 
@@ -52,7 +56,6 @@ RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-
             holder.ten.setText(productsList.get(position).getPname());
 
             holder.gia.setText(productsList.get(position).getPrice() + " $");
@@ -66,12 +69,14 @@ RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
             holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
+
                     Intent intent = new Intent(mcontext, mainDetailProduct.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
                     intent.putExtra("day_create",productsList.get(position).getDate());
                     intent.putExtra("time_create",productsList.get(position).getTime());
-
+                    intent.putExtra("username",_username);
                     intent.putExtra("pname", productsList.get(position).getPname());
                     intent.putExtra("price", productsList.get(position).getPrice());
                     intent.putExtra("des", productsList.get(position).getDescription());
@@ -80,12 +85,14 @@ RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
                     mcontext.startActivity(intent);
 
                 }
+
             });
 
         }catch (Exception e){
             Toast.makeText(mcontext, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 
