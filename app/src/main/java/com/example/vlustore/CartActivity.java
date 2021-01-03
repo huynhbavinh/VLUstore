@@ -57,7 +57,6 @@ public class CartActivity extends AppCompatActivity {
 
         getUsername();
 
-        Log.d("shopping: ", "onCreate: "+ _username);
 
         getData();
         setData();
@@ -120,39 +119,45 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private void setData() {
+        try {
+            Log.d("errorss", "setData: "+ _username);
+            Query query = ProductsRef.child("Cart List").equalTo(_username);
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-        Query query = ProductsRef.child("Cart List").orderByChild(_username);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try {
+                        adapter.clear();
+                        for (DataSnapshot data : snapshot.getChildren()) {
 
-                try {
-                    adapter.clear();
-                    for (DataSnapshot data : snapshot.getChildren()) {
+                            String key = data.getKey();
+                            Log.d("loi~", "loi adapter -" + key);
+                            soluong = data.child("qual").getValue(String.class);
 
-                        String key = data.getKey();
-                        Log.d("loi~", "loi adapter -" + key);
-                        soluong = data.child("qual").getValue(String.class);
+                            String bill = data.getValue(Bill.class).toString() + "\n" + "số lượng : " + soluong + " cái";
 
-                        String bill = data.getValue(Bill.class).toString() + "\n" + "số lượng : " + soluong + " cái";
-
-                        //sanpham.add(key + bill);
-                        adapter.add(key + bill);
+                            //sanpham.add(key + bill);
+                            adapter.add(key + bill);
 
 
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(CartActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("loi~", "loi adapter " + soluong);
                     }
-                } catch (Exception e) {
-                    Toast.makeText(CartActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.d("loi~", "loi adapter " + soluong);
+
                 }
 
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("loi~", "onCancelled: ", error.toException());
+                }
+            });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("loi~", "onCancelled: ", error.toException());
-            }
-        });
+        }catch (Exception e){
+            Log.d("Exception error", "setData: " + e.getMessage());
+        }
+
     }
 
     private void ConfirmInformation(String item) {
