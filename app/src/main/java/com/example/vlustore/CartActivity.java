@@ -44,7 +44,7 @@ public class CartActivity extends AppCompatActivity {
     private String child_product;
     String chuyen_soluong_bill;
     String soluong="";
-
+    private String _username ="0982";
     ListView list;
     ArrayAdapter<String> adapter;
 
@@ -52,6 +52,10 @@ public class CartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        //get intent username
+//        _username = getIntent().getStringExtra("username");
+
 
         adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1);
         list =(ListView)findViewById(R.id.list_bills);
@@ -126,7 +130,7 @@ public class CartActivity extends AppCompatActivity {
 
     private void setData() {
 
-        Query query = ProductsRef.child("Cart List").child("0982");
+        Query query = ProductsRef.child("Cart List").child(_username);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -170,7 +174,7 @@ public class CartActivity extends AppCompatActivity {
         saveCurrentTime = currentDate.format(Cafordate.getTime());
 
         final String KeyBill = saveCurrentTime + saveCurrentDate;
-        final DatabaseReference Information = FirebaseDatabase.getInstance().getReference().child("order").child("0982");
+        final DatabaseReference Information = FirebaseDatabase.getInstance().getReference().child("order").child(_username);
 
         HashMap<String, Object> orderMap  = new HashMap<>();
         orderMap.put("sanpham",item);
@@ -184,7 +188,7 @@ public class CartActivity extends AppCompatActivity {
                 if (task.isSuccessful())
                     FirebaseDatabase.getInstance().getReference()
                             .child("Cart List")
-                            .child("0982")
+                            .child(_username)
                             .removeValue();
 
             }
