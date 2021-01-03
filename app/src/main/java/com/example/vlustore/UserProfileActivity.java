@@ -2,9 +2,12 @@ package com.example.vlustore;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -20,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class UserProfileActivity extends AppCompatActivity {
 
+
     //firebase
     private FirebaseDatabase rootNode;
     private DatabaseReference reference;
@@ -29,7 +33,7 @@ public class UserProfileActivity extends AppCompatActivity {
     // Inits
     TextView txt_profile_name, txt_profile_username;
     TextInputLayout txt_fullname, txt_phone, txt_password;
-
+    DrawerLayout drawerLayout;
     //intents
     private Intent intent;
 
@@ -113,5 +117,35 @@ public class UserProfileActivity extends AppCompatActivity {
         _fullname = snapshot.child(_username).child("fullname").getValue(String.class);
         _phoneNo = snapshot.child(_username).child("phoneNo").getValue(String.class);
         _password = snapshot.child(_username).child("password").getValue(String.class);
+    }
+
+
+    /* Navigation Drawer MENU*/
+    public void ClickMenu(View view){
+        // open drawer
+        openDrawer(drawerLayout);
+    }
+
+    private static void openDrawer(DrawerLayout drawerLayout) {
+        // open drawer layout
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    public void ClickLogo(View view){
+        // close drawer
+        closeDrawer(drawerLayout);
+    }
+
+    private void closeDrawer(DrawerLayout drawerLayout) {
+        // close drawer layout
+        // check condition
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+            // close drawer
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    public void ClickHome(View view){
+        recreate();
     }
 }

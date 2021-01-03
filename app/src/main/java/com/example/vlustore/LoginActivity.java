@@ -110,9 +110,6 @@ public class LoginActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
                         intent.putExtra("username", usernameDB);
-//                        intent.putExtra("phoneNo", phoneDB);
-//                        intent.putExtra("password", passwordDB);
-
 
                         Toast.makeText(LoginActivity.this, "login successful!", Toast.LENGTH_SHORT).show();
                         startActivity(intent);
