@@ -97,7 +97,11 @@ public class mainDetailProduct extends AppCompatActivity {
         cartMap.put("date",saveCurrentDate);
         cartMap.put("time",saveCurrentTime);
 
-        soluong = Integer.valueOf(edsoluong.getText().toString());
+        try{
+            soluong = Integer.valueOf(edsoluong.getText().toString());
+        }catch (Exception e){
+            Toast.makeText(this, "Điền số lượng", Toast.LENGTH_SHORT).show();
+        }
         //DatabaseReference load_product = FirebaseDatabase.getInstance().getReference().child("Products").child(keyProduct);
         cartListRef.updateChildren(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

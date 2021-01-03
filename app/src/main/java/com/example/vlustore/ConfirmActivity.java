@@ -32,7 +32,7 @@ public class ConfirmActivity extends AppCompatActivity {
     private EditText Name, Phone, Address;
     private Button confirm;
     private String totalAmount = "";
-    String KeyProduct;
+    //String KeyProduct;
 
     private String _username;
     private Intent intent;
@@ -44,26 +44,36 @@ public class ConfirmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm);
 
-        confirm = (Button) findViewById(R.id.confirm_btn);
-        Name = (EditText) findViewById(R.id.edname);
-        Phone = (EditText) findViewById(R.id.edNum);
-        Address = (EditText) findViewById(R.id.edaddress);
-
         getUsername();
-        getData();
+        sanpham = new ArrayList<String>();
+
+        Log.d("user", "onCreate: tao" + _username);
         ProductsRef = FirebaseDatabase.getInstance().getReference();
+
+
+        getData();
+
+        confirm = (Button) findViewById(R.id.confirm_btn);
+
+
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Check();
+                int counter = 0;
+                for (String item : sanpham
+                ) {
+                    ConfirmInformation(item,counter);
+                    counter++;
+                }
+                Toast.makeText(ConfirmActivity.this, "thank you", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
 
     void getData() {
         sanpham = getIntent().getStringArrayListExtra("list_sp");
-        Log.d("loisanpham", "getData: "+sanpham.size());
     }
 
     private void Check() {
@@ -73,10 +83,6 @@ public class ConfirmActivity extends AppCompatActivity {
             Toast.makeText(this, "Please provide your phone number.", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(Address.getText().toString())) {
             Toast.makeText(this, "Please provide your address.", Toast.LENGTH_SHORT).show();
-        } else {
-            for (String item : sanpham) {
-                ConfirmInformation(item);
-            }
         }
     }
 
@@ -106,10 +112,16 @@ public class ConfirmActivity extends AppCompatActivity {
     private void getUsername() {
         intent = getIntent();
         _username = intent.getStringExtra("username");
+
     }
 
-    private void ConfirmInformation(String item) {
-
+    private void ConfirmInformation(String item, final int counter) {
+        String temp = String.valueOf(counter);
+        final String bo_dem = temp;
+                Name = (EditText) findViewById(R.id.edname);
+        Phone = (EditText) findViewById(R.id.edNum);
+        Address = (EditText) findViewById(R.id.edaddress);
+        Check();
         final String saveCurrentDate, saveCurrentTime;
 
 
@@ -118,28 +130,31 @@ public class ConfirmActivity extends AppCompatActivity {
         saveCurrentDate = currentDate.format(Cafordate.getTime());
 
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-        saveCurrentTime = currentDate.format(Cafordate.getTime());
+        saveCurrentTime = currentTime.format(Cafordate.getTime());
 
         final String KeyBill = saveCurrentTime + saveCurrentDate;
-        final DatabaseReference Information = FirebaseDatabase.getInstance().getReference().child("order").child(_username);
+
 
         final HashMap<String, Object> orderMap = new HashMap<>();
+
+        String nameUserBill = Name.getText().toString();
+        String phoneUserBill = Phone.getText().toString();
+        String addresUserBill = Address.getText().toString();
+
 
         orderMap.put("sanpham", item);
         orderMap.put("pid", KeyBill);
         orderMap.put("date", saveCurrentDate);
         orderMap.put("time", saveCurrentTime);
-        orderMap.put("pid", KeyProduct);
-        orderMap.put("name", Name.getText().toString());
-        orderMap.put("phone", Phone.getText().toString());
-        orderMap.put("address", Address.getText().toString());
-        orderMap.put("date", saveCurrentDate);
-        orderMap.put("time", saveCurrentTime);
+        orderMap.put("name", nameUserBill);
+        orderMap.put("phone", phoneUserBill);
+        orderMap.put("address", addresUserBill);
 
-        Information.addValueEventListener(new ValueEventListener() {
+
+        ProductsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ProductsRef.child("order").child(_username).setValue(orderMap);
+                ProductsRef.child("order").child(_username).child(bo_dem).setValue(orderMap);
 
                 FirebaseDatabase.getInstance().getReference()
                         .child("Cart List")

@@ -38,6 +38,7 @@ import java.util.HashMap;
 public class CartActivity extends AppCompatActivity {
     private String _username;
     private Intent intent;
+
     private RecyclerView.LayoutManager layoutManager;
     private Button NextProcessBtn, cancel;
     private TextView txtTotalAmount;
@@ -55,15 +56,17 @@ public class CartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
+        ProductsRef = FirebaseDatabase.getInstance().getReference();
         getUsername();
 
 
-        getData();
-        setData();
-
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        sanpham = new ArrayList<String>();
         list = (ListView) findViewById(R.id.list_bills);
         list.setAdapter(adapter);
+
+        getData();
+        setData();
 
         NextProcessBtn = (Button) findViewById(R.id.next_process_btn);
         txtTotalAmount = (TextView) findViewById(R.id.total_price);
@@ -77,16 +80,18 @@ public class CartActivity extends AppCompatActivity {
         NextProcessBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(CartActivity.this , ConfirmActivity.class);
-//                intent.putStringArrayListExtra("list_sp",sanpham);
-//
-//                startActivity(intent);
-//                finish();
+                Intent intent = new Intent(CartActivity.this , ConfirmActivity.class);
+                intent.putStringArrayListExtra("list_sp",sanpham);
+                Log.d("goiuser", "onItemClick: " + _username);
+                intent.putExtra("username",_username);
+
+                startActivity(intent);
+                finish();
 
             }
         });
         //fire-base
-        ProductsRef = FirebaseDatabase.getInstance().getReference();
+
 
 
 
@@ -97,6 +102,7 @@ public class CartActivity extends AppCompatActivity {
                 String key = data.split("\n")[0];
                 Intent intent = new Intent(CartActivity.this, Cart_System_Activity.class);
                 intent.putExtra("pid", key);
+                intent.putExtra("username",_username);
                 startActivity(intent);
 
             }
@@ -120,30 +126,29 @@ public class CartActivity extends AppCompatActivity {
 
     private void setData() {
         try {
-            Log.d("errorss", "setData: "+ _username);
-            Query query = ProductsRef.child("Cart List").equalTo(_username);
+
+            Query query = ProductsRef.child("Cart List").child(_username);
+
             query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                     try {
                         adapter.clear();
+
                         for (DataSnapshot data : snapshot.getChildren()) {
 
                             String key = data.getKey();
-                            Log.d("loi~", "loi adapter -" + key);
+
                             soluong = data.child("qual").getValue(String.class);
 
                             String bill = data.getValue(Bill.class).toString() + "\n" + "số lượng : " + soluong + " cái";
 
-                            //sanpham.add(key + bill);
+
                             adapter.add(key + bill);
-
-
+                            sanpham.add(key + bill);
                         }
                     } catch (Exception e) {
                         Toast.makeText(CartActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.d("loi~", "loi adapter " + soluong);
                     }
 
                 }
@@ -160,46 +165,46 @@ public class CartActivity extends AppCompatActivity {
 
     }
 
-    private void ConfirmInformation(String item) {
-
-        final String saveCurrentDate, saveCurrentTime;
-
-
-        Calendar Cafordate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
-        saveCurrentDate = currentDate.format(Cafordate.getTime());
-
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-        saveCurrentTime = currentDate.format(Cafordate.getTime());
-
-        final String KeyBill = saveCurrentTime + saveCurrentDate;
-        final DatabaseReference Information = FirebaseDatabase.getInstance().getReference().child("order").child(_username);
-
-        final HashMap<String, Object> orderMap = new HashMap<>();
-
-        orderMap.put("sanpham", item);
-        orderMap.put("pid", KeyBill);
-        orderMap.put("date", saveCurrentDate);
-        orderMap.put("time", saveCurrentTime);
-
-        Information.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ProductsRef.child("order").child(_username).setValue(orderMap);
-
-                FirebaseDatabase.getInstance().getReference()
-                        .child("Cart List")
-                        .child(_username)
-                        .removeValue();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
+//    private void ConfirmInformation(String item) {
+//
+//        final String saveCurrentDate, saveCurrentTime;
+//
+//
+//        Calendar Cafordate = Calendar.getInstance();
+//        SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
+//        saveCurrentDate = currentDate.format(Cafordate.getTime());
+//
+//        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+//        saveCurrentTime = currentDate.format(Cafordate.getTime());
+//
+//        final String KeyBill = saveCurrentTime + saveCurrentDate;
+//        final DatabaseReference Information = FirebaseDatabase.getInstance().getReference().child("order").child(_username);
+//
+//        final HashMap<String, Object> orderMap = new HashMap<>();
+//
+//        orderMap.put("sanpham", item);
+//        orderMap.put("pid", KeyBill);
+//        orderMap.put("date", saveCurrentDate);
+//        orderMap.put("time", saveCurrentTime);
+//
+//        Information.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                ProductsRef.child("order").child(_username).setValue(orderMap);
+//
+//                FirebaseDatabase.getInstance().getReference()
+//                        .child("Cart List")
+//                        .child(_username)
+//                        .removeValue();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//
+//    }
 
     private void getUsername() {
         intent = getIntent();

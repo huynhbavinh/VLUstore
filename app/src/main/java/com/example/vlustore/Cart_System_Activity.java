@@ -30,6 +30,9 @@ public class Cart_System_Activity extends AppCompatActivity {
     String d_pname,d_price,d_des,d_img;
     String keyProduct;
     String TAG = "loiCartSystem";
+
+    private String _username;
+    private Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +40,12 @@ public class Cart_System_Activity extends AppCompatActivity {
 
         edsoluong = (EditText) findViewById(R.id.edsoluong);
         quantity = (TextView) findViewById(R.id.quantity);
+        getUsername();
         getContactDetail();
+    }
+    private void getUsername() {
+        intent = getIntent();
+        _username = intent.getStringExtra("username");
     }
     private void getContactDetail(){
         Intent intent = getIntent();
@@ -52,7 +60,7 @@ public class Cart_System_Activity extends AppCompatActivity {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference("Cart List");
         //DatabaseReference myReference = database.getReference("Cart List");
 
-        Query query = database.child("0982").orderByChild(keyProduct);
+        Query query = database.child(_username).orderByChild(keyProduct);
 
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -111,7 +119,7 @@ public class Cart_System_Activity extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("Cart List");
-                myRef.child("0982").child(keyProduct).removeValue();
+                myRef.child(_username).child(keyProduct).removeValue();
                 finish();
             }
         });
@@ -126,7 +134,7 @@ public class Cart_System_Activity extends AppCompatActivity {
                 DatabaseReference myRef = database.getReference("Cart List");
                 String contactId=keyProduct;
                 String qual =edsoluong.getText().toString();
-                myRef.child("0982").child(contactId).child("qual").setValue(qual);
+                myRef.child(_username).child(contactId).child("qual").setValue(qual);
                 finish();
             }
         });

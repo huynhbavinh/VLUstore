@@ -8,6 +8,9 @@ public class BillDetails {
         this.phone = phone;
         this.addr = addr;
     }
+    public BillDetails(){
+
+    }
     public String getPname() {
         return pname;
     }
