@@ -66,6 +66,10 @@ public class ConfirmActivity extends AppCompatActivity {
                     ConfirmInformation(item,counter);
                     counter++;
                 }
+                FirebaseDatabase.getInstance().getReference()
+                        .child("Cart List")
+                        .child(_username)
+                        .removeValue();
                 Toast.makeText(ConfirmActivity.this, "thank you", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -156,10 +160,6 @@ public class ConfirmActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ProductsRef.child("order").child(_username).child(bo_dem).setValue(orderMap);
 
-                FirebaseDatabase.getInstance().getReference()
-                        .child("Cart List")
-                        .child(_username)
-                        .removeValue();
             }
 
             @Override
