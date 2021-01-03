@@ -2,6 +2,7 @@ package com.example.vlustore;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +39,8 @@ import java.util.HashMap;
 public class CartActivity extends AppCompatActivity {
     private String _username;
     private Intent intent;
-
+    private DrawerLayout drawerLayout;
+    private TextView nav_username;
     private RecyclerView.LayoutManager layoutManager;
     private Button NextProcessBtn, cancel;
     private TextView txtTotalAmount;
@@ -57,9 +59,14 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         ProductsRef = FirebaseDatabase.getInstance().getReference();
+        // get username from intent
         getUsername();
+        nav_username = findViewById(R.id.navigation_txt_username);
+        // set username to navigation menu
+        nav_username.setText(_username);
 
-
+        // init drawer layout
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         sanpham = new ArrayList<String>();
         list = (ListView) findViewById(R.id.list_bills);
@@ -74,16 +81,16 @@ public class CartActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               finish();
+                finish();
             }
         });
         NextProcessBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CartActivity.this , ConfirmActivity.class);
-                intent.putStringArrayListExtra("list_sp",sanpham);
+                Intent intent = new Intent(CartActivity.this, ConfirmActivity.class);
+                intent.putStringArrayListExtra("list_sp", sanpham);
                 Log.d("goiuser", "onItemClick: " + _username);
-                intent.putExtra("username",_username);
+                intent.putExtra("username", _username);
 
                 startActivity(intent);
                 finish();
@@ -93,8 +100,6 @@ public class CartActivity extends AppCompatActivity {
         //fire-base
 
 
-
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,7 +107,7 @@ public class CartActivity extends AppCompatActivity {
                 String key = data.split("\n")[0];
                 Intent intent = new Intent(CartActivity.this, Cart_System_Activity.class);
                 intent.putExtra("pid", key);
-                intent.putExtra("username",_username);
+                intent.putExtra("username", _username);
                 startActivity(intent);
 
             }
@@ -159,55 +164,48 @@ public class CartActivity extends AppCompatActivity {
                 }
             });
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("Exception error", "setData: " + e.getMessage());
         }
 
     }
 
-//    private void ConfirmInformation(String item) {
-//
-//        final String saveCurrentDate, saveCurrentTime;
-//
-//
-//        Calendar Cafordate = Calendar.getInstance();
-//        SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
-//        saveCurrentDate = currentDate.format(Cafordate.getTime());
-//
-//        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-//        saveCurrentTime = currentDate.format(Cafordate.getTime());
-//
-//        final String KeyBill = saveCurrentTime + saveCurrentDate;
-//        final DatabaseReference Information = FirebaseDatabase.getInstance().getReference().child("order").child(_username);
-//
-//        final HashMap<String, Object> orderMap = new HashMap<>();
-//
-//        orderMap.put("sanpham", item);
-//        orderMap.put("pid", KeyBill);
-//        orderMap.put("date", saveCurrentDate);
-//        orderMap.put("time", saveCurrentTime);
-//
-//        Information.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                ProductsRef.child("order").child(_username).setValue(orderMap);
-//
-//                FirebaseDatabase.getInstance().getReference()
-//                        .child("Cart List")
-//                        .child(_username)
-//                        .removeValue();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//    }
-
     private void getUsername() {
         intent = getIntent();
         _username = intent.getStringExtra("username");
     }
+
+    //  /* Navigation Drawer MENU*/
+
+    public void ClickMenu(View view) {
+        // open drawer
+        ProductDisplayActivity.openDrawer(drawerLayout);
+    }
+
+    public void ClickLogo(View view) {
+        // close drawer
+        ProductDisplayActivity.closeDrawer(drawerLayout);
+    }
+
+    public void ClickUsername(View view) {
+        ProductDisplayActivity.redirectActivity(this, UserProfileActivity.class);
+    }
+
+    public void ClickHome(View view) {
+        ProductDisplayActivity.redirectActivity(this, ProductDisplayActivity.class);
+    }
+
+
+    public void ClickShopingCart(View view) {
+        ProductDisplayActivity.closeDrawer(drawerLayout);
+    }
+
+    public void ClickBill(View view) {
+        ProductDisplayActivity.redirectActivity(this, userBillManagement.class);
+    }
+
+    public void ClickExit(View view) {
+        ProductDisplayActivity.logout(this);
+    }
+
 }

@@ -24,7 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class UserProfileActivity extends AppCompatActivity {
 
-
+    private DrawerLayout drawerLayout;
+    private TextView nav_username;
     //firebase
     private FirebaseDatabase rootNode;
     private DatabaseReference reference;
@@ -49,8 +50,22 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_user_profile);
+        // get username from intent
+        getUsername();
+        nav_username = findViewById(R.id.navigation_txt_username);
+        // set username to navigation menu
+        nav_username.setText(_username);
+
+        // init drawer layout
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         containsKey();
         showAllUserData();
+    }
+
+    private void getUsername() {
+        intent = getIntent();
+        _username = getIntent().getStringExtra("username");
     }
 
 
@@ -94,7 +109,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 txt_fullname.getEditText().setText(_fullname);
                 txt_phone.getEditText().setText(_phoneNo);
                 txt_password.getEditText().setText(_password);
-                
+
             }
 
             @Override
@@ -122,5 +137,37 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
 
+    //  /* Navigation Drawer MENU*/
+
+    public void ClickMenu(View view) {
+        // open drawer
+        ProductDisplayActivity.openDrawer(drawerLayout);
+    }
+
+    public void ClickLogo(View view) {
+        // close drawer
+        ProductDisplayActivity.closeDrawer(drawerLayout);
+    }
+
+    public void ClickUsername(View view) {
+        ProductDisplayActivity.closeDrawer(drawerLayout);
+    }
+
+    public void ClickHome(View view) {
+        ProductDisplayActivity.redirectActivity(this, ProductDisplayActivity.class);
+    }
+
+
+    public void ClickShopingCart(View view) {
+        ProductDisplayActivity.redirectActivity(this, CartActivity.class);
+    }
+
+    public void ClickBill(View view) {
+        ProductDisplayActivity.redirectActivity(this, userBillManagement.class);
+    }
+
+    public void ClickExit(View view) {
+        ProductDisplayActivity.logout(this);
+    }
 
 }

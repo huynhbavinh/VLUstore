@@ -66,24 +66,13 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
-    
-        <TextView
-            android:id="@+id/txt_get_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="15dp"
-            android:text="forget password?"
-            android:textColor="#000000"
-            android:textSize="20dp" />
 
         <Button
             android:id="@+id/login_btn"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:background="@drawable/button_border"
             android:onClick="loginUser"
             android:text="Login"

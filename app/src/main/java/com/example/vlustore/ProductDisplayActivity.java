@@ -61,14 +61,6 @@ public class ProductDisplayActivity extends AppCompatActivity {
         mangSP = new ArrayList<>();
         getData();
 
-//        floaticon = (FloatingActionButton) findViewById(R.id.floatingActionButton4);
-//        floaticon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(ProductDisplayActivity.this, CartActivity.class);
-//                startActivity(intent);
-//            }
-//        });
     }
 
     private void getUsername() {
@@ -109,7 +101,7 @@ public class ProductDisplayActivity extends AppCompatActivity {
         openDrawer(drawerLayout);
     }
 
-    private static void openDrawer(DrawerLayout drawerLayout) {
+    public static void openDrawer(DrawerLayout drawerLayout) {
         // open drawer layout
         drawerLayout.openDrawer(GravityCompat.START);
     }
@@ -119,7 +111,7 @@ public class ProductDisplayActivity extends AppCompatActivity {
         closeDrawer(drawerLayout);
     }
 
-    private void closeDrawer(DrawerLayout drawerLayout) {
+    public static void closeDrawer(DrawerLayout drawerLayout) {
         // close drawer layout
         // check condition
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -146,17 +138,22 @@ public class ProductDisplayActivity extends AppCompatActivity {
         redirectActivity(this, CartActivity.class);
     }
 
+    // BILL
+    public void ClickBill(View view) {
+        redirectActivity(this, userBillManagement.class);
+    }
+
     // LOG OUT
     public void ClickExit(View view) {
         logout(this);
     }
 
-    private static void logout(Activity activity) {
+    public static void logout(Activity activity) {
         activity.finishAffinity();
         System.exit(0);
     }
 
-    private static void redirectActivity(Activity activity, Class aClass) {
+    public static void redirectActivity(Activity activity, Class aClass) {
 
         Intent intent = new Intent(activity, aClass);
         intent.putExtra("username", _username);
