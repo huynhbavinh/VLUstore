@@ -33,7 +33,7 @@
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/username"
+            android:id="@+id/login_txt_username"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password"
+            android:id="@+id/login_txt_password"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -85,6 +85,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
             android:background="@drawable/button_border"
+            android:onClick="loginUser"
             android:text="Login"
             android:textSize="20dp" />
 
@@ -94,6 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
+            android:onClick="setBtn_to_signup"
             android:text="New user? Sign Up"
             android:textColor="#000000"
             android:textSize="20dp" />
