@@ -51,8 +51,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loginUser(View view) {
         if (!validateUserName() | !validatePassword()) {
-            Log.d("LOGIN:", "VALIDATOR");
-
             return;
         } else {
 

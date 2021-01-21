@@ -31,8 +31,6 @@ import java.util.HashMap;
 public class ConfirmActivity extends AppCompatActivity {
     private EditText Name, Phone, Address;
     private Button confirm;
-    private String totalAmount = "";
-    //String KeyProduct;
 
     private String _username;
     private Intent intent;
@@ -50,21 +48,18 @@ public class ConfirmActivity extends AppCompatActivity {
         Log.d("user", "onCreate: tao" + _username);
         ProductsRef = FirebaseDatabase.getInstance().getReference();
 
-
         getData();
 
         confirm = (Button) findViewById(R.id.confirm_btn);
 
-
-
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int counter = 0;
+
                 for (String item : sanpham
                 ) {
-                    ConfirmInformation(item,counter);
-                    counter++;
+                    ConfirmInformation(item);
+
                 }
                 FirebaseDatabase.getInstance().getReference()
                         .child("Cart List")
@@ -80,93 +75,77 @@ public class ConfirmActivity extends AppCompatActivity {
         sanpham = getIntent().getStringArrayListExtra("list_sp");
     }
 
-    private void Check() {
-        if (TextUtils.isEmpty(Name.getText().toString())) {
-            Toast.makeText(this, "Please provide your full name.", Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(Phone.getText().toString())) {
-            Toast.makeText(this, "Please provide your phone number.", Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(Address.getText().toString())) {
-            Toast.makeText(this, "Please provide your address.", Toast.LENGTH_SHORT).show();
-        }
+    private boolean Check() {
+        String valName = Name.getText().toString();
+        String valPhone = Phone.getText().toString();
+        String valAddress = Address.getText().toString();
+        if (valName.isEmpty() | valPhone.isEmpty() | valAddress.isEmpty()) {
+            return false;
+        } else
+            return true;
     }
 
-    //    private void ConfirmInformation(){
-//        final String saveCurrentDate, saveCurrentTime;
-//
-//        Calendar Cafordate = Calendar.getInstance();
-//        SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
-//        saveCurrentDate = currentDate.format(Cafordate.getTime());
-//
-//        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-//        saveCurrentTime = currentDate.format(Cafordate.getTime());
-//
-//        Log.d("loiusername", "ConfirmInformation: " + _username);
-//        final DatabaseReference Information = FirebaseDatabase.getInstance().getReference().child("order").child(_username);
-//
-//        HashMap<String, Object> orderMap  = new HashMap<>();
-//        orderMap.put("pid", KeyProduct);
-//        orderMap.put("name", Name.getText().toString());
-//        orderMap.put("phone", Phone.getText().toString());
-//        orderMap.put("address", Address.getText().toString());
-//        orderMap.put("date", saveCurrentDate);
-//        orderMap.put("time", saveCurrentTime);
-//
-//        ConfirmInformation();
-//    }
+
     private void getUsername() {
         intent = getIntent();
         _username = intent.getStringExtra("username");
-
     }
 
-    private void ConfirmInformation(String item, final int counter) {
+    private void ConfirmInformation(String item) {
+        int counter = 0;
         String temp = String.valueOf(counter);
         final String bo_dem = temp;
-                Name = (EditText) findViewById(R.id.edname);
+        Name = (EditText) findViewById(R.id.edname);
         Phone = (EditText) findViewById(R.id.edNum);
         Address = (EditText) findViewById(R.id.edaddress);
-        Check();
-        final String saveCurrentDate, saveCurrentTime;
+        if (Check() == false) {
+            Toast.makeText(this, "Hãy nhập đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
+            Log.d("validator :", "ConfirmInformation: " + Check());
+            return;
+        } else {
+
+            final String saveCurrentDate, saveCurrentTime;
+
+            Calendar Cafordate = Calendar.getInstance();
+            SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
+            saveCurrentDate = currentDate.format(Cafordate.getTime());
+
+            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+            saveCurrentTime = currentTime.format(Cafordate.getTime());
+
+            final String KeyBill = saveCurrentTime + saveCurrentDate;
 
 
-        Calendar Cafordate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
-        saveCurrentDate = currentDate.format(Cafordate.getTime());
+            final HashMap<String, Object> orderMap = new HashMap<>();
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-        saveCurrentTime = currentTime.format(Cafordate.getTime());
-
-        final String KeyBill = saveCurrentTime + saveCurrentDate;
+            String nameUserBill = Name.getText().toString();
+            String phoneUserBill = Phone.getText().toString();
+            String addresUserBill = Address.getText().toString();
 
 
-        final HashMap<String, Object> orderMap = new HashMap<>();
+            orderMap.put("sanpham", sanpham);
+            orderMap.put("pid", KeyBill);
+            orderMap.put("date", saveCurrentDate);
+            orderMap.put("time", saveCurrentTime);
+            orderMap.put("name", nameUserBill);
+            orderMap.put("phone", phoneUserBill);
+            orderMap.put("address", addresUserBill);
 
-        String nameUserBill = Name.getText().toString();
-        String phoneUserBill = Phone.getText().toString();
-        String addresUserBill = Address.getText().toString();
+            counter++;
 
+            ProductsRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-        orderMap.put("sanpham", item);
-        orderMap.put("pid", KeyBill);
-        orderMap.put("date", saveCurrentDate);
-        orderMap.put("time", saveCurrentTime);
-        orderMap.put("name", nameUserBill);
-        orderMap.put("phone", phoneUserBill);
-        orderMap.put("address", addresUserBill);
+                    ProductsRef.child("order").child(_username).child(KeyBill).setValue(orderMap);
 
+                }
 
-        ProductsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ProductsRef.child("order").child(_username).child(bo_dem).setValue(orderMap);
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
+                }
+            });
+        }
     }
 }

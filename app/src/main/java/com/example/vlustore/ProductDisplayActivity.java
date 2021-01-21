@@ -79,7 +79,7 @@ public class ProductDisplayActivity extends AppCompatActivity {
 
                     mangSP.add(product);
                 }
-                RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getApplicationContext(), mangSP,_username);
+                RecyclerAdapter recyclerAdapter = new RecyclerAdapter(getApplicationContext(), mangSP, _username);
 
                 recyclerView.setAdapter(recyclerAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(ProductDisplayActivity.this));
@@ -122,7 +122,7 @@ public class ProductDisplayActivity extends AppCompatActivity {
 
     // USER PROFILE
     public void ClickUsername(View view) {
-        intent = new Intent(ProductDisplayActivity.this,UserProfileActivity.class);
+        intent = new Intent(ProductDisplayActivity.this, UserProfileActivity.class);
         intent.putExtra("username", _username);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -149,8 +149,9 @@ public class ProductDisplayActivity extends AppCompatActivity {
     }
 
     public static void logout(Activity activity) {
+        Intent intent = new Intent(activity, LoginActivity.class);
+        activity.startActivity(intent);
         activity.finishAffinity();
-        System.exit(0);
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {

@@ -11,8 +11,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.vluadmin.Billitems;
+import com.example.vlustore.models.Billitems;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +32,7 @@ public class userBillManagement extends AppCompatActivity {
     private RecyclerView billRecycleView;
     private RecyclerView.Adapter billAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<com.example.vluadmin.Billitems> billitems;
+    private ArrayList<com.example.vlustore.models.Billitems> billitems;
 
 
     private DatabaseReference billReference;
@@ -61,11 +62,23 @@ public class userBillManagement extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                billitems.clear();
-                String uid = snapshot.getKey();
-                String date = snapshot.child("0").child("time").getValue().toString();
-                billitems.add(new Billitems(uid, date));
-                setBillRecycleView();
+                if (snapshot.exists()) {
+                    billitems.clear();
+                    int itemCount = 0;
+                    String uid = snapshot.getKey();
+                    String date = "";
+                    for (DataSnapshot item : snapshot.getChildren()) {
+                        String itemKey = item.getKey();
+                        date = snapshot.child(itemKey).child("time").getValue().toString();
+                        itemCount++;
+                    }
+                    billitems.add(new Billitems(uid, date, String.valueOf(itemCount)));
+                    Log.d("count", "onDataChange: " + itemCount);
+                    setBillRecycleView();
+                } else {
+                    Toast.makeText(userBillManagement.this, "GIỎ HÀNG TRỐNG!", Toast.LENGTH_LONG).show();
+                }
+
             }
 
             @Override

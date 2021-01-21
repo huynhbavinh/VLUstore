@@ -30,7 +30,7 @@ public class mainDetailProduct extends AppCompatActivity {
     private String _username;
     private Intent intent;
     TextView ednoidung,edgiatien,edtensanpham,edsoluong;
-    TextView noidung,giatien,tensanpham,quantity;
+    TextView noidung,giatien,quantity;
     Button quaylai,giohang;
     ImageView img;
     String d_pname,d_price,d_des,d_img;
@@ -51,7 +51,6 @@ public class mainDetailProduct extends AppCompatActivity {
         giatien = (TextView) findViewById(R.id.giatien);
         edsoluong = (EditText) findViewById(R.id.edsoluong);
         quantity = (TextView) findViewById(R.id.quantity);
-        tensanpham = (TextView) findViewById(R.id.sanpham);
         img = (ImageView) findViewById(R.id.d_imageView);
         quaylai = (Button) findViewById(R.id.cancelbtn);
         quaylai.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +74,7 @@ public class mainDetailProduct extends AppCompatActivity {
         intent = getIntent();
         _username = intent.getStringExtra("username");
     }
+
 
 
     private void addingToCartList() {

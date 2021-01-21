@@ -1,5 +1,6 @@
 package com.example.vlustore;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import com.example.vluadmin.Billitems;
+
+import com.example.vlustore.models.Billitems;
 
 
 public class BillRecyclerAdapter extends RecyclerView.Adapter<BillRecyclerAdapter.BillViewHolder> {
     private ArrayList<Billitems> _billList;
 
     public static class BillViewHolder extends RecyclerView.ViewHolder {
-        TextView txt_user, txt_date;
+        TextView txt_user, txt_date, txt_count;
 
         public BillViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_user = itemView.findViewById(R.id.cv_user);
             txt_date = itemView.findViewById(R.id.cv_date);
+            txt_count = itemView.findViewById(R.id.cv_count);
         }
     }
 
@@ -41,7 +44,10 @@ public class BillRecyclerAdapter extends RecyclerView.Adapter<BillRecyclerAdapte
         Billitems currentItem = _billList.get(position);
 
         holder.txt_user.setText(currentItem.get_cvUser());
-        holder.txt_date.setText("Date: " + currentItem.get_cvDate());
+        holder.txt_date.setText(currentItem.get_cvDate());
+        holder.txt_count.setText(currentItem.get_cvCount());
+
+        Log.d("count", "onBindViewHolder: " + currentItem.get_cvCount());
     }
 
     @Override

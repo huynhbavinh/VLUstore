@@ -7,7 +7,7 @@
     app:cardCornerRadius="5dp"
     app:cardElevation="2dp"
     app:cardUseCompatPadding="true"
-    app:contentPadding="10dp">
+    app:contentPadding="5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,12 +23,47 @@
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/cv_date"
+        <RelativeLayout
+            android:id="@+id/cv_line_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cv_user"
-            android:text="date" />
+            android:layout_below="@+id/cv_user">
+
+            <TextView
+                android:id="@+id/txt_cv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ngày cập nhập:" />
+
+            <TextView
+                android:id="@+id/cv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/txt_cv_date"
+                android:text="date" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cv_line_1">
+
+            <TextView
+                android:id="@+id/txt_cv_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số lượng :" />
+
+            <TextView
+                android:id="@+id/cv_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/txt_cv_count"
+                android:text="count" />
+        </RelativeLayout>
+
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

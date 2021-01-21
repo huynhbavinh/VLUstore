@@ -19,7 +19,9 @@
             android:layout_height="300dp"
             android:background="#009FE5"
             android:padding="10dp">
+
             <include layout="@layout/main_toolbar" />
+
             <ImageView
                 android:id="@+id/profile_image"
                 android:layout_width="100dp"
@@ -68,12 +70,13 @@
                 app:cardElevation="10dp">
 
                 <RelativeLayout
+                    android:id="@+id/uf_shoppingcart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:onClick="ClickShopingCart"
                     android:padding="5dp">
 
                     <TextView
-                        android:id="@+id/txt_shoppingcart"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
@@ -94,12 +97,13 @@
                 app:cardElevation="10dp">
 
                 <RelativeLayout
+                    android:id="@+id/uf_bill"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:onClick="ClickBill"
                     android:padding="5dp">
 
                     <TextView
-                        android:id="@+id/txt_bill"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
@@ -173,6 +177,7 @@
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="match_parent"
@@ -181,7 +186,6 @@
 
         <include layout="@layout/main_nav_drawer" />
     </LinearLayout>
-
 
 
 </androidx.drawerlayout.widget.DrawerLayout>
